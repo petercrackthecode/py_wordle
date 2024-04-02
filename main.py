@@ -60,7 +60,7 @@ class Wordle:
             if ch_result == "G":  # GREEN- ch exists within secret at index i
                 background = Back.GREEN
                 foreground = Fore.WHITE
-            if ch_result == "W":  # WHITE- ch doesn't exist within secret
+            elif ch_result == "W":  # WHITE- ch doesn't exist within secret
                 background = Back.WHITE
                 foreground = Fore.BLACK
             elif ch_result == "Y":  # YELLOW- ch exists within secret but at the wrong position
@@ -204,21 +204,21 @@ def main():
         "WATER",
         "YOUTH",
     ]
-    secret = random.choice(wordlist)
-    wordle = Wordle(wordlist=wordlist, secret=secret, allowed_guesses=5)
+    secret: str = random.choice(wordlist)
+    wordle: "Wordle" = Wordle(wordlist=wordlist, secret=secret, allowed_guesses=5)
     print("================================")
     print("Welcome to Wordle!")
     print("================================")
     while True:
-        guessed: str = input("Enter a 5 letter word: ").upper()
+        guessed: str = input("\nEnter a 5-letter word: ").upper()
         result: "GameStatus" = wordle.make_guess(guessed)
 
         if result == GameStatus.CONTINUE:
             continue
         elif result == GameStatus.WON:
-            print(f"Congratulation! The secret word is [{secret}]. You've won")
+            print(f'Congratulation! The secret word is "{secret}". You\'ve won\n')
         elif result == GameStatus.LOST:
-            print(f"You've ran out of guesses. The secret word is [{secret}]")
+            print(f'You\'ve ran out of guesses. The secret word is "{secret}"\n')
 
         break
 
