@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "py-wordle"
+version = "0.1.0"
+description = "a version of wordle on the web built with Python and Flask"
+authors = ["Peter Nguyen <peternguyenforwork@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9"
+requests = "flask"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
