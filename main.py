@@ -7,6 +7,7 @@ from collections import Counter
 import random
 from typing import Dict, List, Counter
 from enum import Enum
+from colorama import Fore, Back, Style
 
 
 class GameStatus(Enum):
@@ -51,10 +52,25 @@ class Wordle:
             )
         self.secret = secret
 
-    def display_result(self, result: List[str]) -> None:
+    def display_result(self, result: List[str], guessed: str) -> None:
         stringify_result: str = "".join(result)
-        print(f"The result was {stringify_result}")
-        print(f"You have {self.allowed_guesses} remaining guesses")
+        for i, ch in enumerate(guessed):
+            ch_result: str = result[i]
+
+            if ch_result == "G":  # GREEN- ch exists within secret at index i
+                background = Back.GREEN
+                foreground = Fore.WHITE
+            if ch_result == "W":  # WHITE- ch doesn't exist within secret
+                background = Back.WHITE
+                foreground = Fore.BLACK
+            elif ch_result == "Y":  # YELLOW- ch exists within secret but at the wrong position
+                background = Back.YELLOW
+                foreground = Fore.WHITE
+            else:
+                raise ValueError(f"Containing wrong color within result: {stringify_result}")
+
+            print(foreground + background + ch, end="")
+            print(Style.RESET_ALL, end=" ")
 
     def make_guess(self, guessed: str) -> GameStatus:
         """
@@ -142,15 +158,18 @@ class Wordle:
             else:
                 ans[i] = "W"
 
-        self.display_result(ans)
-        print()
         # decrement self.allowed_guesses by 1
         self.allowed_guesses -= 1
+
+        self.display_result(ans, guessed)
+        print()
+
         if ans == ["G", "G", "G", "G", "G"]:
             return GameStatus.WON
         elif self.allowed_guesses <= 0:
             return GameStatus.LOST
         else:
+            print(f"You have {self.allowed_guesses} remaining guesses")
             return GameStatus.CONTINUE
 
 
@@ -159,8 +178,12 @@ def main():
         "APPLE",
         "BRAVE",
         "CHAIR",
+        "CRANE",
+        "CRAVE",
         "DREAM",
         "EARTH",
+        "EERIE",
+        "TASTE",
         "FLUTE",
         "GHOST",
         "HAPPY",
