@@ -4,6 +4,7 @@ This is a version of Wordle written in Python.
 """
 
 from collections import Counter
+import random
 from typing import Dict, List, Counter
 from enum import Enum
 
@@ -51,7 +52,9 @@ class Wordle:
         self.secret = secret
 
     def display_result(self, result: List[str]) -> None:
-        pass
+        stringify_result: str = "".join(result)
+        print(f"The result was {stringify_result}")
+        print(f"You have {self.allowed_guesses} remaining guesses")
 
     def make_guess(self, guessed: str) -> GameStatus:
         """
@@ -121,7 +124,7 @@ class Wordle:
             raise RuntimeError("Error: You've run out of available guesses.")
 
         ans: List[str] = ["" for _ in range(5)]
-        ch_freq: Counter[str, int] = Counter(self.secret)
+        ch_freq: Dict[str, int] = Counter(self.secret)
         # check green
         for i, ch in enumerate(guessed):
             if ch == self.secret[i]:
@@ -140,6 +143,7 @@ class Wordle:
                 ans[i] = "W"
 
         self.display_result(ans)
+        print()
         # decrement self.allowed_guesses by 1
         self.allowed_guesses -= 1
         if ans == ["G", "G", "G", "G", "G"]:
@@ -148,3 +152,53 @@ class Wordle:
             return GameStatus.LOST
         else:
             return GameStatus.CONTINUE
+
+
+def main():
+    wordlist: List[str] = [
+        "APPLE",
+        "BRAVE",
+        "CHAIR",
+        "DREAM",
+        "EARTH",
+        "FLUTE",
+        "GHOST",
+        "HAPPY",
+        "IDEAL",
+        "JUICE",
+        "KNOCK",
+        "LIGHT",
+        "MAGIC",
+        "NIGHT",
+        "OCEAN",
+        "PRIZE",
+        "QUIET",
+        "RIVER",
+        "SPACE",
+        "TRAIN",
+        "UNITY",
+        "VALID",
+        "WATER",
+        "YOUTH",
+    ]
+    secret = random.choice(wordlist)
+    wordle = Wordle(wordlist=wordlist, secret=secret, allowed_guesses=5)
+    print("================================")
+    print("Welcome to Wordle!")
+    print("================================")
+    while True:
+        guessed: str = input("Enter a 5 letter word: ").upper()
+        result: "GameStatus" = wordle.make_guess(guessed)
+
+        if result == GameStatus.CONTINUE:
+            continue
+        elif result == GameStatus.WON:
+            print(f"Congratulation! The secret word is [{secret}]. You've won")
+        elif result == GameStatus.LOST:
+            print(f"You've ran out of guesses. The secret word is [{secret}]")
+
+        break
+
+
+if __name__ == "__main__":
+    main()
