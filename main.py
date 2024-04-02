@@ -73,64 +73,6 @@ class Wordle:
             print(Style.RESET_ALL, end=" ")
 
     def make_guess(self, guessed: str) -> GameStatus:
-        """
-        - if a character is at the correct position with the secret, make it green => guessed[i] == secret[i] => make it green
-        - if a character completely doesn't exist within secret, make it white.
-        - if a character exists within secret but at the wrong position (guessed[i] in secret but guessed[i] != secret[i]), make it yellow.
-
-        - Can we use a character multiple times to mark yellow?
-        - If a character already counted by a green and a yellow beforehand, we have to remove its count.
-        => use character counts for secret.
-
-        Let's say the correct answer is EARTH:
-
-                 01234
-        guessed: CRANE ['C', 'R', 'A', 'N', 'E']
-        secret:  EARTH ['E', 'A', 'R', 'T', 'H']
-        answer:  WYYWY ['W', 'Y', 'Y', 'W', 'Y']
-
-                 C R A R E
-                 E A R T H
-                 W Y Y W Y
-
-                 0 1 2 3 4
-        guessed: E E R I E
-        secret:  E A R T H   { E: 0, A: 1, R: 0, T: 1, H: 1 }
-        answer:  G W G W W
-
-                 0 1 2 3 4
-        guessed: O N I O N
-        secret:  E A R T H
-        answer:  W W W W W
-
-                 0 1 2 3 4
-        guessed: W A T E R
-        secret:  E A R T H { E: 1, A: 1, R: 1, T: 1, H: 1 }
-        answer:  W G Y Y Y
-
-                 0 1 2 3 4
-        guessed: E A R T H
-        secret:  E A R T H
-        answer:  G G G G G
-
-                 0 1 2 3 4
-        guessed: T A S T E
-        secret:  E A R T H
-        answer:  W G W G Y
-
-        - have an array called ans to return the result to the guessed word (a list of 'G', 'Y', and 'W'). ans = ['' for _ in range(5)]
-        - have a dictionary call ch_freq to count the frequency of each character within secret: ch_freq:Dict[str, int] = Counter(secret)
-        - loop thru the guessed list to identify all the greens: if secret[i] == guessed[i]:
-            - mark ans[i] as 'G'.
-            - decrement ch_freq[secret[i]] by 1.
-        - loop thru the guessed list to identify the yellow and white:
-            - if ans[i] is already marked as 'G' (green), skip: continue
-            - otherwise, if ch_freq[guessed[i]] > 0:
-                - mark ans[i] as 'Y'.
-                - decrement ch_freq[guessed[i]] by 1
-            - otherwise (ch_freq[guessed[i]] < 0):
-                - mark ans[i] as 'W'
-        """
         if not self._is_valid_word(guessed):
             raise ValueError(
                 "Error: The guessed word must have a length of 5 and be made up of alphabetical letters"
